@@ -1,21 +1,11 @@
-import { db } from "@/db";
-import {redirect} from "next/navigation";
-
-async function createSnippet(data: FormData) {
-    "use server"
-
-    const title = data.get("title")
-    const code = data.get("code")
-    if (!title || !code) throw new Error("Title and code are required")
-    if (typeof title !== "string" || typeof code !== "string") throw new Error("Invalid input")
-
-    const snippet = await db.snippet.create({ data: { title, code } })
-    redirect("/")
-}
+"use client"
+import {createSnippet} from "@/actions/createSnippet";
+import {useFormState} from "react-dom";
 
 export default function SnippetCreatePage() {
+    const [formState, stateFulCreateSnippet] = useFormState(createSnippet, {message: ""})
     return (
-        <form action={createSnippet}>
+        <form action={stateFulCreateSnippet}>
             <h3 className="font-bold mt-2 mb-4">Create a snippet</h3>
 
             <div className="flex flex-col gap-4">
@@ -31,6 +21,9 @@ export default function SnippetCreatePage() {
                     <textarea id="code" name="code" className="border rounded p-2 w-full"/>
                 </div>
             </div>
+            {
+                formState.message && <div className="text-red-500 py-4">{formState.message}</div>
+            }
 
             <button type="submit" className="bg-blue-200 rounded p-2 mt-4 w-full">Create</button>
         </form>
