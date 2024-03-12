@@ -17,6 +17,7 @@ export const updateSnippet = async (
         data: { code },
     })
 
+    revalidatePath("/snippets/" + snippetId)
     redirect("/snippets/" + snippetId)
 }
 
