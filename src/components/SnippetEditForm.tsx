@@ -1,7 +1,7 @@
 "use client"
 
 import {Snippet} from "@prisma/client";
-import {Editor} from "@monaco-editor/react";
+import {Editor, EditorProps} from "@monaco-editor/react";
 import {useLayoutEffect, useRef, useState} from "react";
 import {updateSnippet} from "@/actions/updateSnippet";
 
@@ -10,7 +10,7 @@ type Props = {
 }
 
 export const SnippetEditForm = ({snippet}: Props) => {
-    const [code, setCode] = useState<string | undefined>(snippet.code)
+    const [code, setCode] = useState<string>(snippet.code ?? "")
 
     const latestCodeRef = useRef<string | undefined>(snippet.code)
     useLayoutEffect(() => {
@@ -20,7 +20,11 @@ export const SnippetEditForm = ({snippet}: Props) => {
 
     const didCodeChange = snippet.code !== code
 
-    const boundUpdateSnippet = updateSnippet.bind(null, code) // first arg is bount. Second one wll be form data
+    const boundUpdateSnippet = updateSnippet.bind(null, code) // first arg is bound. Second one will be form data
+
+    const handleChange: EditorProps["onChange"] = newText => {
+        setCode(newText ?? "")
+    }
 
     return (
         <form action={boundUpdateSnippet}>
@@ -30,7 +34,7 @@ export const SnippetEditForm = ({snippet}: Props) => {
                 defaultValue={code}
                 theme="vs-dark"
                 options={{minimap: {enabled: false}}}
-                onChange={setCode}
+                onChange={handleChange}
             ></Editor>
 
             <button

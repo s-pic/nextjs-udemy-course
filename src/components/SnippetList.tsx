@@ -14,7 +14,7 @@ export const SnippetList = ({snippets}: {snippets: Snippet[]}) => {
             className="flex justify-between items-center p-2 border rounded mb-4"
             href={`/snippets/${snippet.id}`}>
             <div>{snippet.title}</div>
-            <pre>{snippet.code}</pre>
+            <button className="p-2 border rounded" type="submit">View</button>
 
         </Link>
         </li>
